@@ -8,7 +8,7 @@ function three(){
     var scene = new THREE.Scene();
     var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000 );
     var renderer = new THREE.WebGLRenderer({ alpha: true });
-    document.getElementById("christmas").appendChild(renderer.domElement);
+    document.getElementById("rose").appendChild(renderer.domElement);
     control = new THREE.OrbitControls(camera, renderer.domElement);
 
     //SIZE ---------
