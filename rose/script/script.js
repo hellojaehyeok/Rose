@@ -7,7 +7,7 @@
 function three(){
     var scene = new THREE.Scene();
     var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000 );
-    var renderer = new THREE.WebGLRenderer({ alpha: true });
+    var renderer = new THREE.WebGLRenderer({ alpha: true ,  antialias: true });
     document.getElementById("rose").appendChild(renderer.domElement);
     control = new THREE.OrbitControls(camera, renderer.domElement);
 
@@ -20,7 +20,7 @@ function three(){
     })
     renderer.setClearColor( 0x000000, 1 );
 
-    camera.position.set(0, 19, 5);
+    camera.position.set(16, 19, 4);
     camera.lookAt(0, 0, 0);
 
 
@@ -35,15 +35,15 @@ function three(){
     scene.add( spotLight );
 
 
-    var main = new THREE.Object3D;
-    var main_loader = new THREE.OBJLoader();
-    main_loader.load(
+    var rose = new THREE.Object3D;
+    var rose_loader = new THREE.OBJLoader();
+    rose_loader.load(
         "./obj/rose.obj",
         function(object){
             object.position.set(0, -9, 0);
             object.scale.set(0.2, 0.2, 0.2);
-            main = object;
-            scene.add(main);
+            rose = object;
+            scene.add(rose);
         }
     );
 
@@ -65,8 +65,7 @@ function three(){
     const renderScene = new function renderScene() {
         requestAnimationFrame(renderScene);
         t += 0.0025;  
-        camera.position.x = 20*Math.cos(t) + 0;
-        camera.position.z = 20*Math.sin(t) + 0;
+        rose.rotation.y += 0.008;
         camera.lookAt(0, 0, 0);
         composer.render();
     }  
