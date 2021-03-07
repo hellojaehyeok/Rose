@@ -40,13 +40,12 @@ function three(){
     rose_loader.load(
         "./obj/rose.obj",
         function(object){
-            object.position.set(0, -9, 0);
+            object.position.set(0, -10, 0);
             object.scale.set(0.2, 0.2, 0.2);
             rose = object;
             scene.add(rose);
         }
     );
-
 
     let composer;
     composer = new POSTPROCESSING.EffectComposer(renderer);
@@ -61,12 +60,9 @@ function three(){
                 
 
  
-    var t = 0;
     const renderScene = new function renderScene() {
         requestAnimationFrame(renderScene);
-        t += 0.0025;  
         rose.rotation.y += 0.008;
-        camera.lookAt(0, 0, 0);
         composer.render();
     }  
     
