@@ -5,7 +5,18 @@
 
 
 function three(){
-    var scene = new THREE.Scene();
+    const scene = new THREE.Scene();
+    let url = [
+        './img/bg/4.jpg',
+        './img/bg/1.jpg', // 1
+        './img/bg/5.jpg', // sky 5
+        './img/bg/2.jpg', // ground 2
+        './img/bg/6.jpg',
+        './img/bg/3.jpg', // 3
+    ]
+    let loader2 = new THREE.CubeTextureLoader();
+    scene.background = loader2.load(url);
+
     var camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000 );
     var renderer = new THREE.WebGLRenderer({ alpha: true ,  antialias: true });
     document.getElementById("rose").appendChild(renderer.domElement);
@@ -19,33 +30,38 @@ function three(){
         renderer.setSize(width, height);
     })
     renderer.setClearColor( 0x000000, 1 );
+    renderer.setPixelRatio( window.devicePixelRatio );
 
-    camera.position.set(16, 19, 4);
+    camera.position.set(2, 10, -130);
     camera.lookAt(0, 0, 0);
 
-
-    const ambient = new THREE.AmbientLight( 0xffffff, 0.5 );
+    const textureCube = new THREE.CubeTextureLoader().load( url);
+    textureCube.mapping = THREE.CubeRefractionMapping;
+    
+    const ambient = new THREE.AmbientLight( 0xffffff );
     scene.add( ambient );
 
-    const directionalLight = new THREE.DirectionalLight( 0xf282a7, 1 );
-    scene.add( directionalLight );
+    pointLight = new THREE.PointLight( 0xffffff, 10 );
+    scene.add( pointLight );
 
-    const spotLight = new THREE.SpotLight( 0xd4e6c4,1 );
-    spotLight.position.set( 0, -10, 0 );
-    scene.add( spotLight );
+    var main = new THREE.Object3D;
+    var loader = new THREE.OBJLoader();
+    loader.load("./obj/rose.obj", function(object) {
+        const materialObj = new THREE.MeshPhongMaterial( {color: 0xccddff , envMap: textureCube, refractionRatio: 0.98} );
+        object.traverse(function(child) {
+            if (child instanceof THREE.Mesh) {
+                child.material = materialObj;
+            }
+        });
+    
+        object.position.set(1, -20, 1);
+        object.scale.set(1, 1, 1);
+        main = object;
+        scene.add(main);
+    });
 
 
-    var rose = new THREE.Object3D;
-    var rose_loader = new THREE.OBJLoader();
-    rose_loader.load(
-        "./obj/rose.obj",
-        function(object){
-            object.position.set(0, -10, 0);
-            object.scale.set(0.2, 0.2, 0.2);
-            rose = object;
-            scene.add(rose);
-        }
-    );
+
 
     let composer;
     composer = new POSTPROCESSING.EffectComposer(renderer);
@@ -57,12 +73,14 @@ function three(){
     );
     effectPass.renderToScreen = true;
     composer.addPass(effectPass);
-                
-
+            
  
     const renderScene = new function renderScene() {
         requestAnimationFrame(renderScene);
-        rose.rotation.y += 0.008;
+        main.rotation.y += 0.008;
+        console.log(camera.position.x);
+        console.log(camera.position.y);
+        console.log(camera.position.z);
         composer.render();
     }  
     
